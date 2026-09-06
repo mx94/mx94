@@ -22,7 +22,7 @@
 
 ## `$ cat about.md`
 
-- **Now** — Building the core of a protein-design agent platform at an AI drug-discovery startup: the `deepagents / LangGraph` runtime, RAG with source citations, a visual workflow engine, MCP tool integration, an agent code sandbox, observability, and **resumable multi-session streaming** — close the tab and the task keeps running; come back and the missed events replay.
+- **Now** — Building the core of a protein-design agent platform for AI drug discovery: the `deepagents / LangGraph` runtime, RAG with source citations, a visual workflow engine, MCP tool integration, an agent code sandbox, observability, and **resumable multi-session streaming** — close the tab and the task keeps running; come back and the missed events replay.
 - **Before** — Nine years of full-stack work, the first seven going deep on the front end: mini-program core flows serving tens of millions of users, a home-grown error-logging SDK plus a Lark bot for log triage, a low-code campaign platform (287 pages shipped to production), a macOS build tool in SwiftUI, and Electron debugging tools.
 - **Credo** — Turn repetitive work into systems; it's a habit, and a joy. The engineering between demo and product — parameter contracts, reconnection, idempotency, recoverability — is where I'm most at home.
 

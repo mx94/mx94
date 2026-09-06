@@ -62,7 +62,7 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const rows = [
   ['OS',        'macOS · zsh · Hangzhou, CN',                                   'val'],
   ['Role',      'AI Agent Engineer · Full-Stack',                               'cyan'],
-  ['Host',      'AI drug-discovery startup · protein-design agents',            'val'],
+  ['Host',      'AI drug discovery · protein-design agents',                    'val'],
   ['Uptime',    `${uptime} on GitHub`,                                          'val'],
   ['Repos',     `${fmt(u.own.totalCount)} original · ${fmt(u.forks.totalCount)} forks`, 'val'],
   ['Commits',   `${fmt(contributions)} contributions in the last year`,         'green'],
