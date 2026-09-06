@@ -5,7 +5,6 @@
 </div>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/📍_Hangzhou-0b0f17?style=flat-square" alt="Hangzhou">
   <img src="https://img.shields.io/badge/⚡_AI_Agent_Engineer-0b0f17?style=flat-square" alt="AI Agent Engineer">
   <img src="https://img.shields.io/badge/🛠_Full--Stack-0b0f17?style=flat-square" alt="Full-Stack">
   <img src="https://komarev.com/ghpvc/?username=mx94&style=flat-square&color=39ff14&label=VISITORS" alt="visitors">
