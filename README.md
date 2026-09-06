@@ -18,6 +18,8 @@
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/mx94/mx94/output/neofetch.svg" width="100%" alt="neofetch-style live profile card, regenerated daily by GitHub Actions">
+  <br>
+  <img src="https://streak-stats.demolab.com?user=mx94&hide_border=true&background=0B0F17&ring=39FF14&fire=FF2BD6&currStreakNum=E6EDF3&sideNums=E6EDF3&currStreakLabel=39FF14&sideLabels=00E5FF&dates=8B949E&stroke=1F2A37&date_format=M%20j%5B%2C%20Y%5D" alt="contribution streak">
 </div>
 
 ## `$ cat about.md`

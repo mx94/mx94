@@ -28,7 +28,7 @@ query($login: String!) {
       totalPullRequestContributions
       totalIssueContributions
       restrictedContributionsCount
-      contributionCalendar { totalContributions }
+      contributionCalendar { totalContributions weeks { contributionDays { date contributionCount } } }
     }
   }
 }`
@@ -53,8 +53,18 @@ let months = (now.getFullYear() - created.getFullYear()) * 12 + (now.getMonth() 
 if (now.getDate() < created.getDate()) months -= 1
 const uptime = `${Math.floor(months / 12)} years, ${months % 12} months`
 const contributions = cc.contributionCalendar.totalContributions
+const days = cc.contributionCalendar.weeks.flatMap((w) => w.contributionDays).sort((a, b) => a.date.localeCompare(b.date))
+let longest = 0, run = 0
+for (const d of days) { run = d.contributionCount > 0 ? run + 1 : 0; if (run > longest) longest = run }
+let current = 0
+{
+  let i = days.length - 1
+  if (i >= 0 && days[i].contributionCount === 0) i -= 1 // today can still be empty without breaking the streak
+  for (; i >= 0 && days[i].contributionCount > 0; i -= 1) current += 1
+}
 const synced = now.toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
 const fmt = (n) => n.toLocaleString('en-US')
+const days_ = (n) => `${fmt(n)} ${n === 1 ? 'day' : 'days'}`
 
 // ---- svg helpers ----------------------------------------------------------
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -66,6 +76,7 @@ const rows = [
   ['Uptime',    `${uptime} on GitHub`,                                          'val'],
   ['Repos',     `${fmt(u.own.totalCount)} original · ${fmt(u.forks.totalCount)} forks`, 'val'],
   ['Commits',   `${fmt(contributions)} contributions in the last year`,         'green'],
+  ['Streak',    `${days_(current)} current · ${days_(longest)} longest`,               'mag'],
   ['Followers', `${fmt(u.followers.totalCount)} · ${fmt(u.starred.totalCount)} repos starred`, 'val'],
   ['Stack',     'TS · React · Vue · Python · Django · LangGraph',                'val'],
   ['Focus',     'agent runtime · RAG · streaming · sandbox · o11y',              'amber'],
@@ -83,12 +94,12 @@ const rowsSvg = rows.map(([k, v, cls], i) => {
 
 // neofetch palette blocks
 const palette = ['#ff5f56', '#ffbd2e', '#39ff14', '#00e5ff', '#3b82f6', '#ff2bd6', '#a855f7', '#e6edf3']
-const blocks = palette.map((c, i) => `<rect x="${330 + i * 30}" y="312" width="26" height="14" rx="2" fill="${c}"/>`).join('')
-const blocksDim = palette.map((c, i) => `<rect x="${330 + i * 30}" y="330" width="26" height="14" rx="2" fill="${c}" fill-opacity="0.45"/>`).join('')
+const blocks = palette.map((c, i) => `<rect x="${330 + i * 30}" y="336" width="26" height="14" rx="2" fill="${c}"/>`).join('')
+const blocksDim = palette.map((c, i) => `<rect x="${330 + i * 30}" y="354" width="26" height="14" rx="2" fill="${c}" fill-opacity="0.45"/>`).join('')
 
 // double helix (left panel): two sine strands + rungs
 const helix = (() => {
-  const cx = 160, top = 78, bottom = 340, amp = 46, period = 84
+  const cx = 160, top = 78, bottom = 364, amp = 46, period = 84
   const pts = (phase) => {
     let d = ''
     for (let y = top; y <= bottom; y += 4) {
@@ -113,7 +124,7 @@ const helix = (() => {
     </g>`
 })()
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="410" viewBox="0 0 900 410" font-family="'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="434" viewBox="0 0 900 434" font-family="'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace">
   <defs>
     <radialGradient id="auroraA" cx="0.1" cy="0.15" r="0.7"><stop offset="0" stop-color="#ff2bd6" stop-opacity="0.28"/><stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/></radialGradient>
     <radialGradient id="auroraB" cx="0.92" cy="0.9" r="0.75"><stop offset="0" stop-color="#00e5ff" stop-opacity="0.26"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></radialGradient>
@@ -122,7 +133,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="410" vi
     <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#00e5ff" stroke-opacity="0.07"/></pattern>
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     <filter id="glowHard" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    <clipPath id="win"><rect x="30" y="26" width="840" height="360" rx="14"/></clipPath>
+    <clipPath id="win"><rect x="30" y="26" width="840" height="384" rx="14"/></clipPath>
   </defs>
   <style>
     .t { font-size: 15px; white-space: pre; }
@@ -132,26 +143,27 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="410" vi
     .cyan { fill: #00e5ff; }
     .green { fill: #39ff14; }
     .amber { fill: #ffb000; }
+    .mag { fill: #ff2bd6; }
     .row { animation: fadein .5s ease-out both; }
     @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
     .strand { stroke-dasharray: 10 6; animation: flow 1.6s linear infinite; }
     .sB { animation-direction: reverse; }
     @keyframes flow { to { stroke-dashoffset: -32; } }
     .beam { animation: sweep 6s linear infinite; }
-    @keyframes sweep { from { transform: translateY(-40px); } to { transform: translateY(430px); } }
+    @keyframes sweep { from { transform: translateY(-40px); } to { transform: translateY(454px); } }
     .cur { animation: blink 1s steps(1, end) infinite; }
     @keyframes blink { 50% { opacity: 0; } }
   </style>
 
-  <rect width="900" height="410" fill="#050810"/>
-  <rect width="900" height="410" fill="url(#grid)"/>
-  <rect width="900" height="410" fill="url(#auroraA)"/>
-  <rect width="900" height="410" fill="url(#auroraB)"/>
-  <rect x="28" y="24" width="844" height="364" rx="16" fill="none" stroke="url(#frame)" stroke-width="2" filter="url(#glowHard)" opacity="0.9"/>
+  <rect width="900" height="434" fill="#050810"/>
+  <rect width="900" height="434" fill="url(#grid)"/>
+  <rect width="900" height="434" fill="url(#auroraA)"/>
+  <rect width="900" height="434" fill="url(#auroraB)"/>
+  <rect x="28" y="24" width="844" height="388" rx="16" fill="none" stroke="url(#frame)" stroke-width="2" filter="url(#glowHard)" opacity="0.9"/>
 
-  <rect x="30" y="26" width="840" height="360" rx="14" fill="#0b0f17" fill-opacity="0.96"/>
+  <rect x="30" y="26" width="840" height="384" rx="14" fill="#0b0f17" fill-opacity="0.96"/>
   <g clip-path="url(#win)">
-    <rect x="30" y="26" width="840" height="360" fill="url(#scan)"/>
+    <rect x="30" y="26" width="840" height="384" fill="url(#scan)"/>
     <rect class="beam" x="30" y="0" width="840" height="26" fill="#00e5ff" fill-opacity="0.05"/>
   </g>
 
@@ -163,7 +175,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="410" vi
 
   <!-- left: helix + wordmark -->
   ${helix}
-  <text x="160" y="370" text-anchor="middle" class="t dim" font-size="11">protein · design · agents</text>
+  <text x="160" y="394" text-anchor="middle" class="t dim" font-size="11">protein · design · agents</text>
 
   <!-- right: header line -->
   <text class="t green" x="330" y="70" font-size="17" font-weight="700" filter="url(#glow)">curry@mx94</text>
@@ -173,11 +185,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="410" vi
 
   ${blocks}
   ${blocksDim}
-  <text class="t dim" x="850" y="372" text-anchor="end" font-size="11">synced ${esc(synced)}</text>
-  <rect class="cur" x="590" y="312" width="9" height="14" fill="#39ff14" filter="url(#glow)"/>
+  <text class="t dim" x="850" y="396" text-anchor="end" font-size="11">synced ${esc(synced)}</text>
+  <rect class="cur" x="590" y="336" width="9" height="14" fill="#39ff14" filter="url(#glow)"/>
 </svg>
 `
 
 mkdirSync(dirname(OUT), { recursive: true })
 writeFileSync(OUT, svg)
-console.log(`wrote ${OUT} — ${fmt(contributions)} contributions, ${u.own.totalCount} repos, ${u.followers.totalCount} followers, uptime ${uptime}`)
+console.log(`wrote ${OUT} — ${fmt(contributions)} contributions, streak ${current}/${longest}, ${u.own.totalCount} repos, ${u.followers.totalCount} followers, uptime ${uptime}`)
