@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="340" viewBox="0 0 900 340" font-family="'SF Mono', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace">
+  <defs>
+    <radialGradient id="auroraA" cx="0.12" cy="0.1" r="0.7">
+      <stop offset="0" stop-color="#ff2bd6" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#ff2bd6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="auroraB" cx="0.9" cy="0.95" r="0.75">
+      <stop offset="0" stop-color="#00e5ff" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff2bd6"/>
+      <stop offset="0.5" stop-color="#00e5ff"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1" fill="#ffffff" fill-opacity="0.045"/>
+    </pattern>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#00e5ff" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowHard" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="win"><rect x="30" y="26" width="840" height="288" rx="14"/></clipPath>
+  </defs>
+
+  <style>
+    .t { font-size: 15.5px; white-space: pre; }
+    .prompt { fill: #39ff14; }
+    .cmd    { fill: #e6edf3; }
+    .dim    { fill: #8b949e; }
+    .cyan   { fill: #00e5ff; }
+    .mag    { fill: #ff2bd6; }
+    .amber  { fill: #ffb000; }
+    .green  { fill: #39ff14; }
+    .type { overflow: hidden; width: var(--w); animation-name: typing; animation-timing-function: steps(var(--n), end); animation-fill-mode: forwards; }
+    @keyframes typing { from { width: 0; } }
+    .l1 { --n: 6;  --w: 62px;  animation-duration: .55s; animation-delay: .6s; }
+    .l2 { --n: 42; --w: 420px; animation-duration: 1.2s; animation-delay: 1.35s; }
+    .l3 { --n: 11; --w: 124px; animation-duration: .7s;  animation-delay: 2.9s; }
+    .l4 { --n: 74; --w: 700px; animation-duration: 1.9s; animation-delay: 3.8s; }
+    .l5 { --n: 74; --w: 740px; animation-duration: 1.9s; animation-delay: 5.9s; }
+    .l6 { --n: 11; --w: 124px; animation-duration: 1.0s; animation-delay: 8.0s; }
+    .cur { animation: blink 1s steps(1, end) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .appear { animation: fadein .25s ease-out both; }
+    .a2 { animation-delay: 1.3s; } .a3 { animation-delay: 2.85s; } .a4 { animation-delay: 3.75s; } .a5 { animation-delay: 5.85s; } .a6 { animation-delay: 7.95s; } .a7 { animation-delay: 9.2s; }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    .beam { animation: sweep 6s linear infinite; }
+    @keyframes sweep { from { transform: translateY(-40px); } to { transform: translateY(360px); } }
+    .flicker { animation: flick 7s infinite; }
+    @keyframes flick { 0%,97%,100% { opacity: 1; } 98% { opacity: .55; } 99% { opacity: .9; } }
+  </style>
+
+  <!-- backdrop -->
+  <rect width="900" height="340" fill="#050810"/>
+  <rect width="900" height="340" fill="url(#grid)"/>
+  <rect width="900" height="340" fill="url(#auroraA)"/>
+  <rect width="900" height="340" fill="url(#auroraB)"/>
+
+  <!-- neon frame -->
+  <rect x="28" y="24" width="844" height="292" rx="16" fill="none" stroke="url(#frame)" stroke-width="2" filter="url(#glowHard)" opacity="0.9"/>
+
+  <!-- terminal window -->
+  <g class="flicker">
+    <rect x="30" y="26" width="840" height="288" rx="14" fill="#0b0f17" fill-opacity="0.96"/>
+    <g clip-path="url(#win)">
+      <rect x="30" y="26" width="840" height="288" fill="url(#scan)"/>
+      <rect class="beam" x="30" y="0" width="840" height="26" fill="#00e5ff" fill-opacity="0.05"/>
+    </g>
+
+    <!-- title bar -->
+    <rect x="30" y="26" width="840" height="34" rx="14" fill="#111826"/>
+    <rect x="30" y="46" width="840" height="14" fill="#111826"/>
+    <circle cx="54" cy="43" r="6" fill="#ff5f56"/>
+    <circle cx="74" cy="43" r="6" fill="#ffbd2e"/>
+    <circle cx="94" cy="43" r="6" fill="#27c93f"/>
+    <text x="450" y="48" text-anchor="middle" class="t dim" font-size="13">curry@mx94: ~ — zsh — 120×32</text>
+
+    <!-- lines -->
+    <g transform="translate(52, 92)">
+      <!-- line 1 -->
+      <text class="t prompt" x="0" y="0" filter="url(#glow)">curry@mx94</text>
+      <text class="t dim" x="100" y="0">~ %</text>
+      <svg class="type l1" x="140" y="-16" height="24"><text class="t cmd" x="0" y="16">whoami</text></svg>
+
+      <!-- line 2 -->
+      <g class="appear a2">
+        <text class="t dim" x="0" y="30">›</text>
+        <svg class="type l2" x="18" y="14" height="24"><text class="t cyan" x="0" y="16" filter="url(#glow)">AI Agent Engineer · Full-Stack · Hangzhou</text></svg>
+      </g>
+
+      <!-- line 3 -->
+      <g class="appear a3">
+        <text class="t prompt" x="0" y="66" filter="url(#glow)">curry@mx94</text>
+        <text class="t dim" x="100" y="66">~ %</text>
+        <svg class="type l3" x="140" y="50" height="24"><text class="t cmd" x="0" y="16">cat now.log</text></svg>
+      </g>
+
+      <!-- line 4 -->
+      <g class="appear a4">
+        <text class="t dim" x="0" y="96">›</text>
+        <svg class="type l4" x="18" y="80" height="24"><text class="t amber" x="0" y="16">building a protein-design agent platform  —  LangGraph runtime · RAG · MCP</text></svg>
+      </g>
+
+      <!-- line 5 -->
+      <g class="appear a5">
+        <text class="t dim" x="0" y="122">›</text>
+        <svg class="type l5" x="18" y="106" height="24"><text class="t amber" x="0" y="16">resumable multi-session streaming · workflow engine · agent sandbox · observability</text></svg>
+      </g>
+
+      <!-- line 6 -->
+      <g class="appear a6">
+        <text class="t prompt" x="0" y="158" filter="url(#glow)">curry@mx94</text>
+        <text class="t dim" x="100" y="158">~ %</text>
+        <svg class="type l6" x="140" y="142" height="24"><text class="t cmd" x="0" y="16">echo $MOTTO</text></svg>
+      </g>
+
+      <!-- line 7 -->
+      <g class="appear a7">
+        <text class="t dim" x="0" y="188">›</text>
+        <text class="t mag" x="18" y="188" filter="url(#glow)">Turn repetitive work into systems — a habit, and a joy.</text>
+        <text class="t prompt" x="0" y="216" filter="url(#glow)">curry@mx94</text>
+        <text class="t dim" x="100" y="216">~ %</text>
+        <rect class="cur" x="142" y="203" width="9" height="17" fill="#39ff14" filter="url(#glow)"/>
+      </g>
+    </g>
+  </g>
+</svg>

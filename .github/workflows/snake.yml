@@ -2,24 +2,43 @@ name: Generate Snake
 
 on:
   schedule:
-    # 每天 00:00 执行一次（UTC）
+    # once a day at 00:00 UTC
     - cron: "0 0 * * *"
-  
-  # 允许手动触发工作流
+
+  # allow manual runs
   workflow_dispatch:
-  
-  # 当提交到 main 或 master 时也会触发
+
+  # also run on every push to main / master
   push:
     branches:
       - main
       - master
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
+      - name: 📥 checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 🧬 generate neofetch.svg (live profile card)
+        run: node scripts/neofetch.mjs dist/neofetch.svg
+        env:
+          # GITHUB_TOKEN sees what any visitor sees. To count private contributions too,
+          # add a PROFILE_TOKEN secret (a PAT with read:user) and it takes precedence.
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_LOGIN: ${{ github.repository_owner }}
+
       - name: 🐍 generate github-contribution-grid-snake.svg
         uses: Platane/snk/svg-only@v3
         with:
@@ -28,7 +47,7 @@ jobs:
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: 🚀 push github-contribution-grid-snake.svg to the output branch
+      - name: 🚀 push generated svgs to the output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
